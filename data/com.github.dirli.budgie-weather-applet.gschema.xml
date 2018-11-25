@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+
+  <schema id="com.github.dirli.budgie-weather-applet.gweather">
+    <key type="d" name="longitude">
+      <default>0</default>
+      <summary>Longitude</summary>
+      <description>Longitude</description>
+    </key>
+    <key type="d" name="latitude">
+      <default>0</default>
+      <summary>Latitude</summary>
+      <description>Latitude</description>
+    </key>
+    <key type="s" name="city-name">
+      <default>""</default>
+      <summary>City name</summary>
+      <description>City name</description>
+    </key>
+  </schema>
+
+  <schema id="com.github.dirli.budgie-weather-applet">
+    <key type="b" name="show-icon">
+      <default>true</default>
+      <summary>Show Icon</summary>
+      <description>Whether to show icon about weather</description>
+    </key>
+    <key type="b" name="show-city-name">
+      <default>true</default>
+      <summary>Show City Name</summary>
+      <description>Whether to show city name</description>
+    </key>
+    <key type="b" name="show-temp">
+      <default>true</default>
+      <summary>Show Temperature</summary>
+      <description>Whether to show temperature</description>
+    </key>
+    <key type="b" name="update-now">
+      <default>false</default>
+      <summary>Update Data Now</summary>
+      <description>Whether to Update Data Now</description>
+    </key>
+    <key type="i" name="update-interval">
+      <default>30</default>
+      <summary>Update Interval</summary>
+      <description>How many minutes to wait before updating data</description>
+    </key>
+    <key type="x" name="last-update">
+      <default>0</default>
+      <summary>Last Update Timestamp</summary>
+      <description>Timestamp for last update</description>
+    </key>
+    <child name="gweather" schema="com.github.dirli.budgie-weather-applet.gweather"/>
+  </schema>
+</schemalist>

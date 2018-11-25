@@ -1,0 +1,7 @@
+[Plugin]
+Module=libbudgieweatherapplet.so
+Name=Budgie Weather
+Description=Weather
+Authors=Dirli
+Website=https://github.com/Dirli/budgie-weather-applet
+Icon=weather-overcast-symbolic

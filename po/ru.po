@@ -1,0 +1,61 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the network-indicator package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Budgie-weather\n"
+"POT-Creation-Date: 2018-11-21 22:39+0300\n"
+"PO-Revision-Date: 2018-11-21 22:43+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: ..\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Language: ru\n"
+"X-Poedit-SearchPath-0: src\n"
+"X-Poedit-SearchPath-1: data/settings.ui\n"
+
+#: data/settings.ui:26
+msgid "Show Icon"
+msgstr "Отображать иконку"
+
+#: data/settings.ui:52
+msgid "Show Temperature"
+msgstr "Отображать температуру"
+
+#: data/settings.ui:75
+msgid "   Update Now   "
+msgstr "Обновить"
+
+#: data/settings.ui:91
+msgid ""
+"Update Interval\n"
+"(minutes)"
+msgstr ""
+"Частота обновления\n"
+"(минуты)"
+
+#: data/settings.ui:124
+msgid "Location"
+msgstr "Местонахождение"
+
+#: src/Providers/LibGWeather.vala:34
+msgid "m/s"
+msgstr "м/с"
+
+#: src/WeatherApplet.vala:74
+msgid "Sunrise"
+msgstr "Восход"
+
+#: src/WeatherApplet.vala:75
+msgid "Sunset"
+msgstr "Закат"
+
+#: src/WeatherApplet.vala:78
+msgid "Last update"
+msgstr "Обновлено"
