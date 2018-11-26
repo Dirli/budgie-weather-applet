@@ -1,13 +1,13 @@
 # weather-applet
 A budgie-desktop applet to show weather in selected city.
 
-![Screenshot](data/screenshot3.jpg)  
+![Screenshot](data/screenshot3.png)  
 
 ### Popover
-![Screenshot](data/screenshot1.jpg)  
+![Screenshot](data/screenshot1.png)  
 
 ### Settings
-![Screenshot](data/screenshot2.jpg)  
+![Screenshot](data/screenshot2.png)
 
 ---
 
