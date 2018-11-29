@@ -124,7 +124,7 @@ namespace WeatherApplet {
 
         private unowned bool update() {
             DateTime last_update = new DateTime.from_unix_local(settings.get_int64("last-update"));
-            DateTime now = new DateTime.now();
+            DateTime now = new DateTime.now_local();
 
             main_grid.update_header (now.format ("%d %B"));
 
