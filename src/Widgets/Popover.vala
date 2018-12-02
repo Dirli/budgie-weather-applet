@@ -26,30 +26,27 @@ namespace WeatherApplet {
         private Gtk.Label wind;
 
         public Popover() {
-
             orientation = Gtk.Orientation.VERTICAL;
             margin = 10;
+            row_spacing = 6;
 
             date_header = new Gtk.Label ("-");
-            date_header.margin = 6;
             date_header.halign = Gtk.Align.CENTER;
-            date_header.valign = Gtk.Align.CENTER;
 
             weather_icon_b = new Gtk.Image ();
 
             city = new Gtk.Label("-");
             city.set_ellipsize (Pango.EllipsizeMode.END);
             city.set_alignment(0, 0.5f);
-            city.margin = 6;
+            city.halign = Gtk.Align.END;
 
             humidity = new Gtk.Label("-");
-            humidity.margin = 6;
+            humidity.halign = Gtk.Align.END;
 
             sky = new Gtk.Label("-");
-            sky.margin = 6;
 
             wind = new Gtk.Label("-");
-            wind.margin = 6;
+            wind.halign = Gtk.Align.END;
 
             Gtk.Label sunrise = new Gtk.Label(_("Sunrise"));
             Gtk.Label sunset = new Gtk.Label(_("Sunset"));
@@ -57,30 +54,37 @@ namespace WeatherApplet {
             sunset_t = new Gtk.Label("-");
 
             Gtk.Label l_update_l = new Gtk.Label(_("Last update"));
-            l_update_l.margin_top = 6;
             l_update_t = new Gtk.Label("-");
-            l_update_t.margin_top = 6;
 
             temp_b = new Gtk.Label ("-");
-            temp_b.margin_top = temp_b.margin_bottom = 10;
+            temp_b.halign = Gtk.Align.END;
+
+            Gtk.Separator separator1 = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            Gtk.Separator separator2 = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            Gtk.Separator separator3 = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
 
             attach (date_header, 0, 0, 3, 1);
-            attach (weather_icon_b, 0, 1, 2, 3);
-            attach (city, 5, 1, 1, 1);
-            attach (temp_b, 5, 2, 1, 1);
-            attach (wind, 5, 3, 1, 1);
-            attach (humidity, 5, 4, 1, 1);
-            attach (sky, 0, 5, 3, 1);
-            attach (sunrise, 0, 6, 2, 1);
-            attach (sunrise_t, 5, 6, 1, 1);
-            attach (sunset, 0, 7, 2, 1);
-            attach (sunset_t, 5, 7, 1, 1);
-            attach (l_update_l, 0, 8, 2, 1);
-            attach (l_update_t, 5, 8, 1, 1);
+            attach (separator1, 0, 1, 3, 1);
+            attach (weather_icon_b, 0, 2, 2, 4);
+            attach (city, 2, 2, 1, 1);
+            attach (temp_b, 2, 3, 1, 1);
+            attach (wind, 2, 4, 1, 1);
+            attach (humidity, 2, 5, 1, 1);
+            attach (sky, 0, 6, 3, 1);
+            attach (separator2, 0, 7, 3, 1);
+            attach (sunrise, 0, 8, 2, 1);
+            attach (sunrise_t, 2, 8, 1, 1);
+            attach (sunset, 0, 9, 2, 1);
+            attach (sunset_t, 2, 9, 1, 1);
+            attach (separator3, 0, 10, 3, 1);
+            attach (l_update_l, 0, 11, 2, 1);
+            attach (l_update_t, 2, 11, 1, 1);
         }
+
         public void update_header (string date) {
             date_header.set_label (date);
         }
+
         public void update_view (WeatherInfo info) {
             city.label = info.city_name;
             humidity.label = info.humidity;
