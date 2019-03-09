@@ -1,55 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
+    <schema id="com.github.dirli.budgie-weather-applet">
+        <key name="auto-loc" type="b">
+            <default>true</default>
+            <summary>Auto location detection</summary>
+            <description>The applet will determine the location of your IP</description>
+        </key>
 
-  <schema id="com.github.dirli.budgie-weather-applet.gweather">
-    <key type="d" name="longitude">
-      <default>0</default>
-      <summary>Longitude</summary>
-      <description>Longitude</description>
-    </key>
-    <key type="d" name="latitude">
-      <default>0</default>
-      <summary>Latitude</summary>
-      <description>Latitude</description>
-    </key>
-    <key type="s" name="city-name">
-      <default>""</default>
-      <summary>City name</summary>
-      <description>City name</description>
-    </key>
-  </schema>
+        <key name="city-name" type="s">
+            <default>""</default>
+            <summary>City name</summary>
+            <description>City name</description>
+        </key>
 
-  <schema id="com.github.dirli.budgie-weather-applet">
-    <key type="b" name="show-icon">
-      <default>true</default>
-      <summary>Show Icon</summary>
-      <description>Whether to show icon about weather</description>
-    </key>
-    <key type="b" name="show-city-name">
-      <default>true</default>
-      <summary>Show City Name</summary>
-      <description>Whether to show city name</description>
-    </key>
-    <key type="b" name="show-temp">
-      <default>true</default>
-      <summary>Show Temperature</summary>
-      <description>Whether to show temperature</description>
-    </key>
-    <key type="b" name="update-now">
-      <default>false</default>
-      <summary>Update Data Now</summary>
-      <description>Whether to Update Data Now</description>
-    </key>
-    <key type="i" name="update-interval">
-      <default>30</default>
-      <summary>Update Interval</summary>
-      <description>How many minutes to wait before updating data</description>
-    </key>
-    <key type="x" name="last-update">
-      <default>0</default>
-      <summary>Last Update Timestamp</summary>
-      <description>Timestamp for last update</description>
-    </key>
-    <child name="gweather" schema="com.github.dirli.budgie-weather-applet.gweather"/>
-  </schema>
+        <key name="idplace" type="s">
+            <default>""</default>
+            <summary>City ID</summary>
+            <description>City ID from OpenWeatherMap</description>
+        </key>
+
+        <key name="last-update" type="x">
+            <default>0</default>
+            <summary>Last Update Timestamp</summary>
+            <description>Timestamp for last update</description>
+        </key>
+
+        <key name="latitude" type="d">
+            <default>0</default>
+            <summary>Latitude</summary>
+            <description>Latitude</description>
+        </key>
+
+        <key name="longitude" type="d">
+            <default>0</default>
+            <summary>Longitude</summary>
+            <description>Longitude</description>
+        </key>
+
+        <key name="show-icon" type="b">
+            <default>true</default>
+            <summary>Show Icon</summary>
+            <description>Whether to show icon about weather</description>
+        </key>
+
+        <key name="show-temp" type="b">
+            <default>true</default>
+            <summary>Show Temperature</summary>
+            <description>Whether to show temperature</description>
+        </key>
+
+        <key name="units" type="s">
+            <default>"metric"</default>
+            <summary>Local units</summary>
+            <description>Units System to use in application: metric or imperial</description>
+        </key>
+
+        <key name="update-interval" type="i">
+            <default>1</default>
+            <summary>Update Interval</summary>
+            <description>How many minutes to wait before updating data</description>
+        </key>
+
+        <key name="update-now" type="b">
+            <default>false</default>
+            <summary>Update Data Now</summary>
+            <description>Whether to Update Data Now</description>
+        </key>
+    </schema>
 </schemalist>

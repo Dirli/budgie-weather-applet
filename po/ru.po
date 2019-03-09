@@ -6,56 +6,59 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Budgie-weather\n"
-"POT-Creation-Date: 2018-11-21 22:39+0300\n"
-"PO-Revision-Date: 2018-11-21 22:43+0300\n"
+"POT-Creation-Date: 2019-03-09 00:06+0300\n"
+"PO-Revision-Date: 2019-03-09 00:17+0300\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
-"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ../src\n"
 "Last-Translator: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "Language: ru\n"
-"X-Poedit-SearchPath-0: src\n"
-"X-Poedit-SearchPath-1: data/settings.ui\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: data/settings.ui:26
-msgid "Show Icon"
-msgstr "Отображать иконку"
+#: Services/Utils.vala:88
+msgid "mph"
+msgstr "миль/час"
 
-#: data/settings.ui:52
-msgid "Show Temperature"
-msgstr "Отображать температуру"
-
-#: data/settings.ui:75
-msgid "   Update Now   "
-msgstr "Обновить"
-
-#: data/settings.ui:91
-msgid ""
-"Update Interval\n"
-"(minutes)"
-msgstr ""
-"Частота обновления\n"
-"(минуты)"
-
-#: data/settings.ui:124
-msgid "Location"
-msgstr "Местонахождение"
-
-#: src/Providers/LibGWeather.vala:34
+#: Services/Utils.vala:92
 msgid "m/s"
-msgstr "м/с"
+msgstr "м/c"
 
-#: src/WeatherApplet.vala:74
+#: Widgets/AppletSettings.vala:35
+msgid "Auto location"
+msgstr "Авто-местоположение"
+
+#: Widgets/AppletSettings.vala:41
+msgid "Search for new location"
+msgstr "Поиск местоположения"
+
+#: Widgets/AppletSettings.vala:44
+msgid "Update interval (h.)"
+msgstr "Частота обновления (ч.)"
+
+#: Widgets/AppletSettings.vala:50
+msgid "Show icon"
+msgstr "Показывать иконку"
+
+#: Widgets/AppletSettings.vala:55
+msgid "Show temperature"
+msgstr "Показывать темп."
+
+#: Widgets/AppletSettings.vala:60
+msgid "Update now"
+msgstr "Обновить сейчас"
+
+#: Widgets/Popover.vala:52
 msgid "Sunrise"
 msgstr "Восход"
 
-#: src/WeatherApplet.vala:75
+#: Widgets/Popover.vala:53
 msgid "Sunset"
 msgstr "Закат"
 
-#: src/WeatherApplet.vala:78
+#: Widgets/Popover.vala:59
 msgid "Last update"
 msgstr "Обновлено"

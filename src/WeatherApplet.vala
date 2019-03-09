@@ -47,8 +47,7 @@ namespace WeatherApplet {
             }
         }
 
-        private Settings? settings;
-        private Settings? gweather_settings;
+        private Settings settings;
         private ILogindManager? logind_manager;
 
         public Applet(string uuid) {
@@ -58,13 +57,12 @@ namespace WeatherApplet {
             settings_prefix = "/com/github/dirli/budgie-weather-applet";
             settings = get_applet_settings(uuid);
             settings.changed.connect(on_settings_change);
-            gweather_settings = settings.get_child("gweather");
 
             weather_icon = new Gtk.Image ();
 
             temp = new Gtk.Label ("-");
-            temp.set_ellipsize (Pango.EllipsizeMode.END);
-            temp.set_alignment(0, 0.5f);
+            // temp.set_ellipsize (Pango.EllipsizeMode.END);
+            // temp.set_alignment(0, 0.5f);
             temp.margin_start = temp.margin_end = 6;
 
             Gtk.Box box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
@@ -123,49 +121,44 @@ namespace WeatherApplet {
         }
 
         private unowned bool update() {
-            DateTime last_update = new DateTime.from_unix_local(settings.get_int64("last-update"));
-            DateTime now = new DateTime.now_local();
-
-            main_grid.update_header (now.format ("%d %B"));
-
-            last_update = last_update.add_minutes(settings.get_int("update-interval"));
-
-            if (last_update.compare(now) <= 0 || fast_check) {
-                settings.set_int64("last-update", now.to_unix());
-                new Thread<int>("", () => {
-                    string city_name = gweather_settings.get_string("city-name");
-                    float latitude = (float)gweather_settings.get_double("latitude");
-                    float longitude = (float)gweather_settings.get_double("longitude");
-                    Providers.LibGWeather.get_current_weather_info(latitude, longitude, city_name, update_gui_with_weather_info);
-                    return 0;
-                });
+            string idplace = settings.get_string ("idplace");
+            if (idplace == "" || idplace == "0") {
+                return false;
             }
+            string lang = Gtk.get_default_language ().to_string ().substring (0, 2);
+            string units = settings.get_string ("units");
+            string uri_query = "?id=" + idplace + "&APPID=" + Constants.API_KEY + "&units=" + units + "&lang=" + lang;
 
+            string uri = Constants.OWM_API_ADDR + "weather" + uri_query;
+            Json.Object? today_obj = Providers.OWM.get_owm_data (uri);
+
+            if (today_obj != null) {
+                if (fast_check) {
+                    fast_check = false;
+                    start_watcher ();
+                }
+                // DateTime last_update = new DateTime.from_unix_local(settings.get_int64("last-update"));
+                // last_update = last_update.add_minutes(settings.get_int("update-interval"));
+                // if (last_update.compare(now) <= 0 || fast_check) {}
+                DateTime now = new DateTime.now_local();
+                settings.set_int64 ("last-update", now.to_unix ());
+                main_grid.update_header (now.format ("%d %B"));
+                WeatherInfo weather_info = WeatherApplet.Services.Parser.parse_forecast (today_obj, units);
+                update_gui_with_weather_info (weather_info);
+            } else if (fast_check) {
+                uint counter_val = counter;
+                if (counter_val == 0 || counter_val == 4) {
+                    start_watcher ();
+                }
+            }
             return true;
         }
 
         public void update_gui_with_weather_info (WeatherInfo? info) {
-            if (info != null) {
-                temp.label = "%d°".printf(info.temp);
-                weather_icon.set_from_icon_name(info.symbolic_icon_name, Gtk.IconSize.SMALL_TOOLBAR);
+            temp.label = info.temp;
+            weather_icon.set_from_icon_name(info.icon_name + "-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
 
-                main_grid.update_view (info);
-
-                if (fast_check) {
-                    fast_check = false;
-                    reset_update_timer(true);
-                }
-            } else {
-                temp.label = " - ";
-                weather_icon.clear();
-
-                if (fast_check) {
-                    uint counter_val = counter;
-                    if (counter_val == 0 || counter_val == 4) {
-                        reset_update_timer(true);
-                    }
-                }
-            }
+            main_grid.update_view (info);
         }
 
         public override void update_popovers(Budgie.PopoverManager? manager){
@@ -175,7 +168,7 @@ namespace WeatherApplet {
 
         protected void on_settings_change(string key) {
             if (key == "update-interval") {
-                reset_update_timer(false);
+                start_watcher();
             } else if (key == "show-icon") {
                 weather_icon.set_visible(settings.get_boolean("show-icon"));
             } else if (key == "show-temp") {
@@ -190,25 +183,20 @@ namespace WeatherApplet {
             queue_resize();
         }
 
-        private void reset_update_timer(bool force_update) {
-            if (force_update) {
-                this.settings.set_int64("last-update", 0);
-            }
-
-            if (this.source_id > 0) {
-                Source.remove(this.source_id);
+        private void start_watcher() {
+            if (source_id > 0) {
+                Source.remove(source_id);
             }
 
             uint interval;
-            if (this.fast_check) {
-                interval = 20 * 1000;
+            if (fast_check) {
+                interval = 20;
             } else {
-                interval = this.settings.get_int("update-interval");
-                interval = interval * 60000;
+                interval = settings.get_int("update-interval") * 3600;
             }
 
             if (interval > 0) {
-                this.source_id = GLib.Timeout.add_full(GLib.Priority.DEFAULT, interval, update);
+                source_id = GLib.Timeout.add_seconds(interval, update);
             }
         }
 
