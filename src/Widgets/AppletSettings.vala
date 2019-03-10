@@ -119,10 +119,10 @@ namespace WeatherApplet {
                 /* settings.set_double("latitude", latitude); */
                 /* settings.set_double("longitude", longitude); */
             } else {
-                settings.set_string("city-name", "");
-                settings.set_string("idplace", "");
-                settings.set_double("latitude", 0);
-                settings.set_double("longitude", 0);
+                settings.reset ("city-name");
+                settings.reset ("idplace");
+                settings.reset ("latitude");
+                settings.reset ("longitude");
             }
         }
 

@@ -31,6 +31,7 @@ namespace WeatherApplet.Providers {
                     var cod = parser.get_root ().get_object ().get_int_member ("cod");
                     if (cod == 200) {return text;}
                 }
+
                 return "";
             } catch (Error e) {
                 warning (e.message);

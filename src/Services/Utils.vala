@@ -1,21 +1,67 @@
 namespace WeatherApplet.Utils {
 
-    // public static int64 update_idplace (string uri) {
-    //     Soup.Session session = new Soup.Session ();
-    //     Soup.Message message = new Soup.Message ("GET", uri);
-    //     session.send_message (message);
-    //     int64 id = 0;
-    //     try {
-    //         var parser = new Json.Parser ();
-    //         parser.load_from_data ((string) message.response_body.flatten ().data, -1);
-    //         var root = parser.get_root ().get_object ();
-    //         id = root.get_int_member ("id");
-    //     } catch (Error e) {
-    //         warning (e.message);
-    //     }
-    //
-    //     return id;
-    // }
+    private static bool update_coords (GLib.Settings settings) {
+        string uri = "https://location.services.mozilla.com/v1/geolocate?key=test";
+        var session = new Soup.Session ();
+        var message = new Soup.Message ("GET", uri);
+        session.send_message (message);
+
+        if (message.status_code == 200) {
+            try {
+                var parser = new Json.Parser ();
+                parser.load_from_data ((string) message.response_body.flatten ().data, -1);
+                var root = parser.get_root ().get_object ();
+                double? latitude = null, longitude = null;
+                foreach (string name in root.get_members ()) {
+                    if (name == "location") {
+                        var mycoords = root.get_object_member ("location");
+                        longitude = mycoords.get_double_member ("lng");
+                        latitude = mycoords.get_double_member ("lat");
+                        break;
+                    }
+                }
+                if (latitude != null && longitude != null) {
+                    settings.set_double ("longitude", longitude);
+                    settings.set_double ("latitude", latitude);
+                    return true;
+                }
+            } catch (Error e) {
+                warning (e.message);
+            }
+        } else {
+            warning ("Status Code: %u\n", message.status_code);
+        }
+
+        return false;
+    }
+
+    public static bool update_idplace (GLib.Settings settings) {
+        string lon = settings.get_double ("longitude").to_string ();
+        string lat = settings.get_double ("latitude").to_string ();
+        string uri = "?lat=" + lat + "&lon=" + lon + "&APPID=" + Constants.API_KEY;
+        uri = Constants.OWM_API_ADDR + "weather" + uri;
+
+        Soup.Session session = new Soup.Session ();
+        Soup.Message message = new Soup.Message ("GET", uri);
+        session.send_message (message);
+
+        if (message.status_code == 200) {
+            try {
+                var parser = new Json.Parser ();
+                parser.load_from_data ((string) message.response_body.flatten ().data, -1);
+
+                var root = parser.get_root ().get_object ();
+                settings.set_string ("idplace", root.get_int_member ("id").to_string ());
+
+                return true;
+            } catch (Error e) {
+                warning (e.message);
+            }
+        } else {
+            warning ("Status Code: %u\n", message.status_code);
+        }
+        return false;
+    }
 
     // public static bool save_cache (string path_json, string data) {
     //     try {

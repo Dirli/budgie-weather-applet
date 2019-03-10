@@ -54,6 +54,9 @@ namespace WeatherApplet {
             Object(uuid: uuid);
 
             settings = new GLib.Settings ("com.github.dirli.budgie-weather-applet");
+            if (settings.get_boolean ("auto-loc")) {
+                settings.reset ("idplace");
+            }
             settings.changed.connect(on_settings_change);
 
             weather_icon = new Gtk.Image ();
@@ -90,8 +93,6 @@ namespace WeatherApplet {
                 return Gdk.EVENT_STOP;
             });
 
-            new GWeather.LocationEntry(GWeather.Location.get_world());
-
             update();
 
             try {
@@ -102,6 +103,11 @@ namespace WeatherApplet {
                             new Thread<int>("", () => {
                                 Thread.usleep(10000000);
                                 counter = 5;
+
+                                if (settings.get_boolean ("auto-loc")) {
+                                    settings.reset ("idplace");
+                                }
+
                                 update();
                                 return 0;
                             });
@@ -109,7 +115,7 @@ namespace WeatherApplet {
                     });
                 }
             } catch (IOError e) {
-                print(e.message);
+                warning (e.message);
             }
 
             popover.get_child().show_all();
@@ -120,15 +126,30 @@ namespace WeatherApplet {
 
         private unowned bool update() {
             string idplace = settings.get_string ("idplace");
-            if (idplace == "" || idplace == "0") {
-                return false;
+            if (idplace == "") {
+                if (settings.get_boolean ("auto-loc")) {
+                    if (!Utils.update_coords (settings)) {
+                        return true;
+                    }
+
+                    if (!Utils.update_idplace (settings)) {
+                        return true;
+                    }
+
+                    idplace = settings.get_string ("idplace");
+                } else {
+                    return false;
+                }
             }
+
             string lang = Gtk.get_default_language ().to_string ().substring (0, 2);
             string units = settings.get_string ("units");
             string api_key = settings.get_string ("personal-key");
+
             if (api_key == "") {
                 api_key = Constants.API_KEY;
             }
+
             string uri_query = "?id=" + idplace + "&APPID=" + api_key + "&units=" + units + "&lang=" + lang;
 
             string uri = Constants.OWM_API_ADDR + "weather" + uri_query;
@@ -177,13 +198,14 @@ namespace WeatherApplet {
                 temp.set_visible(settings.get_boolean("show-temp"));
             } else if (key == "update-now") {
                 if (settings.get_boolean("update-now")) {
+                    if (settings.get_boolean ("auto-loc")) {
+                        settings.reset ("idplace");
+                    }
+
                     fast_check = true;
                     update();
                 }
-            // } else if (key == "personal-key") {
-            //     warning (settings.get_string (key));
             }
-
 
             queue_resize();
         }
@@ -212,11 +234,6 @@ namespace WeatherApplet {
         public override Gtk.Widget? get_settings_ui() {
             return new AppletSettings ();
         }
-    }
-
-    void print(string? message) {
-        if (message == null) message = "";
-        stdout.printf ("Budgie-Weather: %s\n", message);
     }
 }
 
