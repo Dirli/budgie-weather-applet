@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-    <schema id="com.github.dirli.budgie-weather-applet">
+    <schema id="com.github.dirli.budgie-weather-applet" path="/com/github/dirli/budgie-weather-applet/">
         <key name="auto-loc" type="b">
             <default>true</default>
             <summary>Auto location detection</summary>
@@ -35,6 +35,12 @@
             <default>0</default>
             <summary>Longitude</summary>
             <description>Longitude</description>
+        </key>
+
+        <key name="personal-key" type="s">
+            <default>""</default>
+            <summary>Personal key</summary>
+            <description>Your personal API key</description>
         </key>
 
         <key name="show-icon" type="b">

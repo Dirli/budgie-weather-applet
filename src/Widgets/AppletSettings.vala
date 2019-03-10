@@ -20,15 +20,17 @@ namespace WeatherApplet {
         private Gtk.Switch switch_auto_loc;
         private Gtk.Switch switch_icon;
         private Gtk.Switch switch_temp;
+        private Gtk.Entry local_key;
         private Gtk.Button btn_update;
         private GWeather.LocationEntry? gweather_location_entry;
 
-        public AppletSettings(Settings settings) {
+        public AppletSettings() {
             margin = 6;
             row_spacing = 10;
-            this.settings = settings;
+            this.settings = new GLib.Settings ("com.github.dirli.budgie-weather-applet");;
             init_ui ();
             init_settings ();
+            change_auto_loc ();
         }
 
         private void init_ui () {
@@ -45,7 +47,7 @@ namespace WeatherApplet {
             update_interval = new Gtk.SpinButton.with_range (1, 12, 1);
             update_interval.valign = Gtk.Align.CENTER;
             update_interval.halign = Gtk.Align.END;
-            update_interval.set_width_chars (3);
+            update_interval.set_width_chars (2);
 
             Gtk.Label label_icon = new Gtk.Label (_("Show icon"));
             switch_icon = new Gtk.Switch ();
@@ -57,20 +59,24 @@ namespace WeatherApplet {
             switch_temp.valign = Gtk.Align.CENTER;
             switch_temp.halign = Gtk.Align.END;
 
+            local_key = new Gtk.Entry ();
+            local_key.hexpand = true;
+            local_key.placeholder_text = _("Enter personal api key");
+
             btn_update = new Gtk.Button.with_label (_("Update now"));
 
-            attach (loc_label, 0, 0, 1, 1);
-            attach (switch_auto_loc, 1, 0, 1, 1);
+            attach (loc_label,               0, 0, 1, 1);
+            attach (switch_auto_loc,         1, 0, 1, 1);
             attach (gweather_location_entry, 0, 1, 2, 1);
-            attach (interval_label, 0, 2, 1, 1);
-            attach (update_interval, 1, 2, 1, 1);
-            attach (label_icon, 0, 3, 1, 1);
-            attach (switch_icon, 1, 3, 1, 1);
-            attach (label_temp, 0, 4, 1, 1);
-            attach (switch_temp, 1, 4, 1, 1);
-            attach (btn_update, 1, 5, 1, 1);
+            attach (interval_label,          0, 2, 1, 1);
+            attach (update_interval,         1, 2, 1, 1);
+            attach (label_icon,              0, 3, 1, 1);
+            attach (switch_icon,             1, 3, 1, 1);
+            attach (label_temp,              0, 4, 1, 1);
+            attach (switch_temp,             1, 4, 1, 1);
+            attach (local_key,               0, 5, 2, 1);
+            attach (btn_update,              1, 6, 1, 1);
             show_all ();
-            change_auto_loc ();
         }
 
         private void change_auto_loc () {
@@ -82,6 +88,7 @@ namespace WeatherApplet {
             settings.bind("auto-loc", switch_auto_loc, "active", SettingsBindFlags.DEFAULT);
             settings.bind("show-icon", switch_icon, "active", SettingsBindFlags.DEFAULT);
             settings.bind("show-temp", switch_temp, "active", SettingsBindFlags.DEFAULT);
+            settings.bind("personal-key", local_key, "text", SettingsBindFlags.DEFAULT);
 
             btn_update.clicked.connect (() => {
                 settings.set_boolean("update-now", true);
@@ -112,10 +119,10 @@ namespace WeatherApplet {
                 /* settings.set_double("latitude", latitude); */
                 /* settings.set_double("longitude", longitude); */
             } else {
-                settings.reset("city-name");
-                settings.reset("idplace");
-                settings.reset("latitude");
-                settings.reset("longitude");
+                settings.set_string("city-name", "");
+                settings.set_string("idplace", "");
+                settings.set_double("latitude", 0);
+                settings.set_double("longitude", 0);
             }
         }
 

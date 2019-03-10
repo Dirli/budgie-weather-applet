@@ -53,9 +53,7 @@ namespace WeatherApplet {
         public Applet(string uuid) {
             Object(uuid: uuid);
 
-            settings_schema = "com.github.dirli.budgie-weather-applet";
-            settings_prefix = "/com/github/dirli/budgie-weather-applet";
-            settings = get_applet_settings(uuid);
+            settings = new GLib.Settings ("com.github.dirli.budgie-weather-applet");
             settings.changed.connect(on_settings_change);
 
             weather_icon = new Gtk.Image ();
@@ -127,7 +125,11 @@ namespace WeatherApplet {
             }
             string lang = Gtk.get_default_language ().to_string ().substring (0, 2);
             string units = settings.get_string ("units");
-            string uri_query = "?id=" + idplace + "&APPID=" + Constants.API_KEY + "&units=" + units + "&lang=" + lang;
+            string api_key = settings.get_string ("personal-key");
+            if (api_key == "") {
+                api_key = Constants.API_KEY;
+            }
+            string uri_query = "?id=" + idplace + "&APPID=" + api_key + "&units=" + units + "&lang=" + lang;
 
             string uri = Constants.OWM_API_ADDR + "weather" + uri_query;
             Json.Object? today_obj = Providers.OWM.get_owm_data (uri);
@@ -178,7 +180,10 @@ namespace WeatherApplet {
                     fast_check = true;
                     update();
                 }
+            // } else if (key == "personal-key") {
+            //     warning (settings.get_string (key));
             }
+
 
             queue_resize();
         }
@@ -205,7 +210,7 @@ namespace WeatherApplet {
         }
 
         public override Gtk.Widget? get_settings_ui() {
-            return new AppletSettings(this.get_applet_settings(uuid));
+            return new AppletSettings ();
         }
     }
 
