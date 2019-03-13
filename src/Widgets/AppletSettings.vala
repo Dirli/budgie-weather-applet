@@ -69,6 +69,28 @@ namespace WeatherApplet {
             switch_temp.valign = Gtk.Align.CENTER;
             switch_temp.halign = Gtk.Align.END;
 
+            Gtk.Label units_label = new Gtk.Label (_("Units"));
+            Gtk.RadioButton button1 = new Gtk.RadioButton.with_label_from_widget (null, "metric");
+            button1.margin_start = button1.margin_end = 15;
+            button1.margin_bottom = 10;
+            button1.toggled.connect (toggled_units);
+            Gtk.RadioButton button2 = new Gtk.RadioButton.with_label_from_widget (button1, "imperial");
+            button2.margin_start = button2.margin_end = 15;
+            button2.margin_bottom = 10;
+            button2.toggled.connect (toggled_units);
+
+            if (settings.get_string("units") == "metric") {
+                button1.set_active (true);
+            } else {
+                button2.set_active (true);
+            }
+
+            Gtk.Separator separator1 = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            Gtk.Separator separator2 = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+
+            button1.halign = button2.halign = Gtk.Align.START;
+            button1.valign = button2.valign = Gtk.Align.CENTER;
+
             local_key = new Gtk.Entry ();
             local_key.hexpand = true;
             local_key.placeholder_text = _("Enter personal api key");
@@ -84,10 +106,21 @@ namespace WeatherApplet {
             attach (switch_icon,             1, 3, 1, 1);
             attach (label_temp,              0, 4, 1, 1);
             attach (switch_temp,             1, 4, 1, 1);
-            attach (local_key,               0, 5, 2, 1);
-            attach (btn_update,              1, 6, 1, 1);
+            attach (separator1,              0, 5, 2, 1);
+            attach (units_label,             0, 6, 2, 1);
+            attach (button1,                 0, 7, 2, 1);
+            attach (button2,                 0, 8, 2, 1);
+            attach (separator2,              0, 9, 2, 1);
+            attach (local_key,              0, 10, 2, 1);
+            attach (btn_update,             1, 11, 1, 1);
 
             show_all ();
+        }
+
+        private unowned void toggled_units (Gtk.ToggleButton button) {
+            if (button.get_active ()) {
+                settings.set_string("units", button.label);
+            }
         }
 
         private void change_auto_loc () {
