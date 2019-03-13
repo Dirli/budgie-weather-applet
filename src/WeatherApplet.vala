@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Dirli <litandrej85@gmail.com>
+* Copyright (c) 2018-2019 Dirli <litandrej85@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -30,20 +30,22 @@ namespace WeatherApplet {
         Budgie.Popover? popover = null;
         unowned Budgie.PopoverManager? manager = null;
 
+        private string idplace = "";
         private bool fast_check = true;
         private uint _counter = 5;
         private uint counter {
             get {
-                if (_counter > 0) {
+                if (_counter > 1) {
                     _counter -= 1;
                 } else {
+                    _counter = 0;
                     fast_check = false;
                 }
-                return this._counter;
+                return _counter;
             }
             set {
-                this._counter = value;
-                this.fast_check = true;
+                _counter = value;
+                fast_check = true;
             }
         }
 
@@ -54,16 +56,13 @@ namespace WeatherApplet {
             Object(uuid: uuid);
 
             settings = new GLib.Settings ("com.github.dirli.budgie-weather-applet");
-            if (settings.get_boolean ("auto-loc")) {
-                settings.reset ("idplace");
-            }
+            init_idplace ();
+
             settings.changed.connect(on_settings_change);
 
             weather_icon = new Gtk.Image ();
 
             temp = new Gtk.Label ("-");
-            // temp.set_ellipsize (Pango.EllipsizeMode.END);
-            // temp.set_alignment(0, 0.5f);
             temp.margin_start = temp.margin_end = 6;
 
             Gtk.Box box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
@@ -87,7 +86,7 @@ namespace WeatherApplet {
                 if (popover.get_visible()) {
                     popover.hide();
                 } else {
-                    this.manager.show_popover(event_box);
+                    manager.show_popover(event_box);
                 }
 
                 return Gdk.EVENT_STOP;
@@ -104,9 +103,7 @@ namespace WeatherApplet {
                                 Thread.usleep(10000000);
                                 counter = 5;
 
-                                if (settings.get_boolean ("auto-loc")) {
-                                    settings.reset ("idplace");
-                                }
+                                init_idplace ();
 
                                 update();
                                 return 0;
@@ -124,19 +121,31 @@ namespace WeatherApplet {
             on_settings_change("show-temp");
         }
 
+        private void init_idplace () {
+            if (settings.get_boolean ("auto-loc")) {
+                settings.reset ("idplace");
+                idplace = "";
+            } else {
+                idplace = settings.get_string ("idplace");
+            }
+        }
+
         private unowned bool update() {
-            string idplace = settings.get_string ("idplace");
             if (idplace == "") {
                 if (settings.get_boolean ("auto-loc")) {
-                    if (!Utils.update_coords (settings)) {
+                    string new_idplace = Utils.update_location ();
+                    if (new_idplace == "") {
+                        if (fast_check) {
+                            uint counter_val = counter;
+                            if (counter_val == 0 || counter_val == 4) {
+                                start_watcher ();
+                            }
+                        }
+
                         return true;
                     }
 
-                    if (!Utils.update_idplace (settings)) {
-                        return true;
-                    }
-
-                    idplace = settings.get_string ("idplace");
+                    idplace = new_idplace;
                 } else {
                     return false;
                 }
@@ -148,10 +157,11 @@ namespace WeatherApplet {
 
             if (api_key == "") {
                 api_key = Constants.API_KEY;
+            } else {
+                api_key = api_key.replace ("/", "");
             }
 
             string uri_query = "?id=" + idplace + "&APPID=" + api_key + "&units=" + units + "&lang=" + lang;
-
             string uri = Constants.OWM_API_ADDR + "weather" + uri_query;
             Json.Object? today_obj = Providers.OWM.get_owm_data (uri);
 
@@ -160,9 +170,7 @@ namespace WeatherApplet {
                     fast_check = false;
                     start_watcher ();
                 }
-                // DateTime last_update = new DateTime.from_unix_local(settings.get_int64("last-update"));
-                // last_update = last_update.add_minutes(settings.get_int("update-interval"));
-                // if (last_update.compare(now) <= 0 || fast_check) {}
+
                 DateTime now = new DateTime.now_local();
                 settings.set_int64 ("last-update", now.to_unix ());
                 main_grid.update_header (now.format ("%d %B"));
@@ -174,13 +182,13 @@ namespace WeatherApplet {
                     start_watcher ();
                 }
             }
+
             return true;
         }
 
         public void update_gui_with_weather_info (WeatherInfo? info) {
             temp.label = info.temp;
             weather_icon.set_from_icon_name(info.icon_name + "-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
-
             main_grid.update_view (info);
         }
 
@@ -198,10 +206,7 @@ namespace WeatherApplet {
                 temp.set_visible(settings.get_boolean("show-temp"));
             } else if (key == "update-now") {
                 if (settings.get_boolean("update-now")) {
-                    if (settings.get_boolean ("auto-loc")) {
-                        settings.reset ("idplace");
-                    }
-
+                    init_idplace ();
                     fast_check = true;
                     update();
                 }

@@ -18,6 +18,7 @@ shared_library('budgieweatherapplet',
         dep_json_glib,
         dep_libsoup,
         dep_gweather,
+        notify_deps,
     ],
     c_args: [
         '-DGWEATHER_I_KNOW_THIS_IS_UNSTABLE',

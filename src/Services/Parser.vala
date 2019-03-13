@@ -1,3 +1,17 @@
+/*
+* Copyright (c) 2018-2019 Dirli <litandrej85@gmail.com>
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*/
+
 namespace WeatherApplet.Services.Parser {
     public static WeatherInfo parse_forecast (Json.Object forecast, string units) {
         WeatherInfo info = new WeatherApplet.WeatherInfo();
@@ -17,11 +31,12 @@ namespace WeatherApplet.Services.Parser {
         info.description = weather.get_object_element (0).get_string_member ("description");
         info.temp = WeatherApplet.Utils.temp_format (units, main_data.get_double_member ("temp"));
 
-        double? wind_speed = null;
-        double? wind_deg = null;
+        double? wind_speed = null, wind_deg = null;
+
         if (wind.has_member ("speed")) {
             wind_speed = wind.get_double_member ("speed");
         }
+
         if (wind.has_member ("deg")) {
             wind_deg = wind.get_double_member ("deg");
         }

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Dirli <litandrej85@gmail.com>
+* Copyright (c) 2018-2019 Dirli <litandrej85@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,10 +27,20 @@ namespace WeatherApplet {
         public AppletSettings() {
             margin = 6;
             row_spacing = 10;
-            this.settings = new GLib.Settings ("com.github.dirli.budgie-weather-applet");;
+            settings = new GLib.Settings ("com.github.dirli.budgie-weather-applet");;
+
             init_ui ();
-            init_settings ();
+
+            string city_name = settings.get_string("city-name");
+            double latitude = settings.get_double("latitude");
+            double longitude = settings.get_double("longitude");
+
+            if (city_name != "") {
+                gweather_location_entry.set_location(new GWeather.Location.detached(city_name, null, latitude, longitude));
+            }
+
             change_auto_loc ();
+            init_settings ();
         }
 
         private void init_ui () {
@@ -76,11 +86,24 @@ namespace WeatherApplet {
             attach (switch_temp,             1, 4, 1, 1);
             attach (local_key,               0, 5, 2, 1);
             attach (btn_update,              1, 6, 1, 1);
+
             show_all ();
         }
 
         private void change_auto_loc () {
-            gweather_location_entry.set_sensitive (!switch_auto_loc.get_active ());
+            bool auto_loc_state = switch_auto_loc.get_active ();
+            gweather_location_entry.set_sensitive (!auto_loc_state);
+
+            if (auto_loc_state) {
+                reset_state ();
+            }
+        }
+
+        private void reset_state () {
+            settings.reset ("city-name");
+            settings.reset ("idplace");
+            settings.reset ("latitude");
+            settings.reset ("longitude");
         }
 
         private void init_settings () {
@@ -96,63 +119,30 @@ namespace WeatherApplet {
             });
 
             switch_auto_loc.notify["active"].connect (change_auto_loc);
-
             gweather_location_entry.changed.connect (location_entry_changed);
-            var city_name = settings.get_string("city-name");
-            var latitude = settings.get_double("latitude");
-            var longitude = settings.get_double("longitude");
-            if (city_name != "") {
-                gweather_location_entry.set_location(new GWeather.Location.detached(city_name, null, latitude, longitude));
-            }
         }
 
         private void location_entry_changed() {
             GWeather.Location? location = gweather_location_entry.get_location ();
-            double latitude, longitude;
-            string city_name;
 
             if (location != null) {
+                double latitude, longitude;
                 location.get_coords(out latitude, out longitude);
-                city_name = location.get_city_name ();
+                string city_name = location.get_city_name ();
+
                 new_location (latitude, longitude, city_name);
-                /* settings.set_string("city-name", city_name); */
-                /* settings.set_double("latitude", latitude); */
-                /* settings.set_double("longitude", longitude); */
             } else {
-                settings.reset ("city-name");
-                settings.reset ("idplace");
-                settings.reset ("latitude");
-                settings.reset ("longitude");
+                reset_state ();
             }
         }
 
         private void new_location (double latitude, double longitude, string city_name) {
-            string uri_query = "?lat=" + latitude.to_string () + "&lon=" + longitude.to_string () + "&APPID=" + Constants.API_KEY;
-            string uri = Constants.OWM_API_ADDR + "weather" + uri_query;
-
-            string new_idplace = update_idplace (uri).to_string ();
+            string new_idplace = Utils.get_idplace (longitude.to_string (), latitude.to_string ());
 
             settings.set_string("city-name", city_name);
             settings.set_double("latitude", latitude);
             settings.set_double("longitude", longitude);
             settings.set_string ("idplace", new_idplace);
-        }
-
-        public static int64 update_idplace (string uri) {
-            Soup.Session session = new Soup.Session ();
-            Soup.Message message = new Soup.Message ("GET", uri);
-            session.send_message (message);
-            int64 id = 0;
-            try {
-                var parser = new Json.Parser ();
-                parser.load_from_data ((string) message.response_body.flatten ().data, -1);
-                var root = parser.get_root ().get_object ();
-                id = root.get_int_member ("id");
-            } catch (Error e) {
-                warning (e.message);
-            }
-
-            return id;
         }
     }
 }

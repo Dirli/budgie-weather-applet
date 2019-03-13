@@ -1,6 +1,19 @@
-namespace WeatherApplet.Utils {
+/*
+* Copyright (c) 2018-2019 Dirli <litandrej85@gmail.com>
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*/
 
-    private static bool update_coords (GLib.Settings settings) {
+namespace WeatherApplet.Utils {
+    private static string update_location () {
         string uri = "https://location.services.mozilla.com/v1/geolocate?key=test";
         var session = new Soup.Session ();
         var message = new Soup.Message ("GET", uri);
@@ -20,24 +33,21 @@ namespace WeatherApplet.Utils {
                         break;
                     }
                 }
+
                 if (latitude != null && longitude != null) {
-                    settings.set_double ("longitude", longitude);
-                    settings.set_double ("latitude", latitude);
-                    return true;
+                    return get_idplace ("%.5f".printf (longitude), "%.5f".printf (latitude));
                 }
             } catch (Error e) {
                 warning (e.message);
             }
         } else {
-            warning ("Status Code: %u\n", message.status_code);
+            code_handler (message.status_code);
         }
 
-        return false;
+        return "";
     }
 
-    public static bool update_idplace (GLib.Settings settings) {
-        string lon = settings.get_double ("longitude").to_string ();
-        string lat = settings.get_double ("latitude").to_string ();
+    public static string get_idplace (string lon, string lat) {
         string uri = "?lat=" + lat + "&lon=" + lon + "&APPID=" + Constants.API_KEY;
         uri = Constants.OWM_API_ADDR + "weather" + uri;
 
@@ -51,16 +61,34 @@ namespace WeatherApplet.Utils {
                 parser.load_from_data ((string) message.response_body.flatten ().data, -1);
 
                 var root = parser.get_root ().get_object ();
-                settings.set_string ("idplace", root.get_int_member ("id").to_string ());
 
-                return true;
+                return root.get_int_member ("id").to_string ();
             } catch (Error e) {
                 warning (e.message);
             }
         } else {
-            warning ("Status Code: %u\n", message.status_code);
+            code_handler (message.status_code);
         }
-        return false;
+
+        return "";
+    }
+
+    public static void code_handler (uint status_code) {
+        string msg;
+
+        if (status_code == 2) {
+            msg = "Check internet connection";
+        } else if (status_code == 403) {
+            msg = _("You may be making too many requests to the server");
+        } else if (status_code >= 400 && status_code < 500) {
+            msg = _("Data not available, possibly incorrect api key");
+        } else if (status_code >= 500 && status_code < 600) {
+            msg = _("Service is unavailable");
+        } else {
+            msg = _("An error occurred while receiving the forecast");
+        }
+
+        warning ("Data not received. Status Code: %u\n", status_code);
     }
 
     // public static bool save_cache (string path_json, string data) {
@@ -128,6 +156,7 @@ namespace WeatherApplet.Utils {
         if (speed == null) {
             return "no data";
         }
+
         string windformat = "%.1f ".printf(speed);
         switch (units) {
             case "imperial":
