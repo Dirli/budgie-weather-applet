@@ -1,64 +1,90 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the network-indicator package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Dirli <dirli1589@yahoo.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Budgie-weather\n"
-"POT-Creation-Date: 2019-03-09 00:06+0300\n"
-"PO-Revision-Date: 2019-03-09 00:17+0300\n"
+"POT-Creation-Date: 2019-03-14 11:24+0300\n"
+"PO-Revision-Date: 2019-03-14 11:29+0300\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.1\n"
 "X-Poedit-Basepath: ../src\n"
-"Last-Translator: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Poedit-SearchPath-0: .\n"
 
+#: Services/Utils.vala:82
+msgid "You may be making too many requests to the server"
+msgstr "Возможно, вы делаете слишком много запросов к серверу"
+
+#: Services/Utils.vala:84
+msgid "Data not available, possibly incorrect api key"
+msgstr "Данные недоступны, возможно неверный ключ api"
+
+#: Services/Utils.vala:86
+msgid "Service is unavailable"
+msgstr "Служба недоступна"
+
 #: Services/Utils.vala:88
+msgid "An error occurred while receiving the forecast"
+msgstr "Ошибка при получении прогноза"
+
+#: Services/Utils.vala:163
 msgid "mph"
 msgstr "миль/час"
 
-#: Services/Utils.vala:92
+#: Services/Utils.vala:167
 msgid "m/s"
 msgstr "м/c"
 
-#: Widgets/AppletSettings.vala:35
+#: Widgets/AppletSettings.vala:47
 msgid "Auto location"
 msgstr "Авто-местоположение"
 
-#: Widgets/AppletSettings.vala:41
+#: Widgets/AppletSettings.vala:53
 msgid "Search for new location"
 msgstr "Поиск местоположения"
 
-#: Widgets/AppletSettings.vala:44
+#: Widgets/AppletSettings.vala:56
 msgid "Update interval (h.)"
 msgstr "Частота обновления (ч.)"
 
-#: Widgets/AppletSettings.vala:50
+#: Widgets/AppletSettings.vala:62
 msgid "Show icon"
 msgstr "Показывать иконку"
 
-#: Widgets/AppletSettings.vala:55
+#: Widgets/AppletSettings.vala:67
 msgid "Show temperature"
-msgstr "Показывать темп."
+msgstr "Показывать температуру"
 
-#: Widgets/AppletSettings.vala:60
+#: Widgets/AppletSettings.vala:72
+msgid "Units"
+msgstr "Единицы измерения"
+
+#: Widgets/AppletSettings.vala:96
+msgid "Enter personal api key"
+msgstr "Введите личный ключ api"
+
+#: Widgets/AppletSettings.vala:98
 msgid "Update now"
 msgstr "Обновить сейчас"
 
-#: Widgets/Popover.vala:52
+#: Widgets/Popover.vala:51
 msgid "Sunrise"
 msgstr "Восход"
 
-#: Widgets/Popover.vala:53
+#: Widgets/Popover.vala:52
 msgid "Sunset"
 msgstr "Закат"
 
-#: Widgets/Popover.vala:59
+#: Widgets/Popover.vala:58
 msgid "Last update"
 msgstr "Обновлено"

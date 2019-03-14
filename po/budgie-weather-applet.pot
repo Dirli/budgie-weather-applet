@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Budgie-weather\n"
-"POT-Creation-Date: 2019-03-09 00:06+0300\n"
+"POT-Creation-Date: 2019-03-14 11:22+0300\n"
 "PO-Revision-Date: 2018-11-21 20:23+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,46 +18,70 @@ msgstr ""
 "X-Poedit-Basepath: ../src\n"
 "X-Poedit-SearchPath-0: .\n"
 
+#: Services/Utils.vala:82
+msgid "You may be making too many requests to the server"
+msgstr ""
+
+#: Services/Utils.vala:84
+msgid "Data not available, possibly incorrect api key"
+msgstr ""
+
+#: Services/Utils.vala:86
+msgid "Service is unavailable"
+msgstr ""
+
 #: Services/Utils.vala:88
+msgid "An error occurred while receiving the forecast"
+msgstr ""
+
+#: Services/Utils.vala:163
 msgid "mph"
 msgstr ""
 
-#: Services/Utils.vala:92
+#: Services/Utils.vala:167
 msgid "m/s"
 msgstr ""
 
-#: Widgets/AppletSettings.vala:35
+#: Widgets/AppletSettings.vala:47
 msgid "Auto location"
 msgstr ""
 
-#: Widgets/AppletSettings.vala:41
+#: Widgets/AppletSettings.vala:53
 msgid "Search for new location"
 msgstr ""
 
-#: Widgets/AppletSettings.vala:44
+#: Widgets/AppletSettings.vala:56
 msgid "Update interval (h.)"
 msgstr ""
 
-#: Widgets/AppletSettings.vala:50
+#: Widgets/AppletSettings.vala:62
 msgid "Show icon"
 msgstr ""
 
-#: Widgets/AppletSettings.vala:55
+#: Widgets/AppletSettings.vala:67
 msgid "Show temperature"
 msgstr ""
 
-#: Widgets/AppletSettings.vala:60
+#: Widgets/AppletSettings.vala:72
+msgid "Units"
+msgstr ""
+
+#: Widgets/AppletSettings.vala:96
+msgid "Enter personal api key"
+msgstr ""
+
+#: Widgets/AppletSettings.vala:98
 msgid "Update now"
 msgstr ""
 
-#: Widgets/Popover.vala:52
+#: Widgets/Popover.vala:51
 msgid "Sunrise"
 msgstr ""
 
-#: Widgets/Popover.vala:53
+#: Widgets/Popover.vala:52
 msgid "Sunset"
 msgstr ""
 
-#: Widgets/Popover.vala:59
+#: Widgets/Popover.vala:58
 msgid "Last update"
 msgstr ""
