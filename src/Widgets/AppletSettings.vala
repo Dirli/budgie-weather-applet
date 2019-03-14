@@ -91,6 +91,7 @@ namespace WeatherApplet {
             button1.halign = button2.halign = Gtk.Align.START;
             button1.valign = button2.valign = Gtk.Align.CENTER;
 
+            Gtk.Label provider_label = new Gtk.Label ("Provider https://openweathermap.org/");
             local_key = new Gtk.Entry ();
             local_key.hexpand = true;
             local_key.placeholder_text = _("Enter personal api key");
@@ -111,8 +112,9 @@ namespace WeatherApplet {
             attach (button1,                 0, 7, 2, 1);
             attach (button2,                 0, 8, 2, 1);
             attach (separator2,              0, 9, 2, 1);
-            attach (local_key,              0, 10, 2, 1);
-            attach (btn_update,             1, 11, 1, 1);
+            attach (provider_label,         0, 10, 2, 1);
+            attach (local_key,              0, 11, 2, 1);
+            attach (btn_update,             1, 12, 1, 1);
 
             show_all ();
         }

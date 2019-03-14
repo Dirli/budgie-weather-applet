@@ -7,7 +7,6 @@ project('budgie-weather-applet',
     ],
 )
 
-gnome = import('gnome')
 i18n = import('i18n')
 
 am_cflags = [
