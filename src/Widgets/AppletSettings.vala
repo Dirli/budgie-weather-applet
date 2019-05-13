@@ -154,7 +154,8 @@ namespace WeatherApplet {
             });
 
             switch_auto_loc.notify["active"].connect (change_auto_loc);
-            gweather_location_entry.changed.connect (location_entry_changed);
+            // gweather_location_entry.changed.connect (location_entry_changed);
+            gweather_location_entry.search_changed.connect (location_entry_changed);
         }
 
         private void location_entry_changed() {
@@ -166,8 +167,6 @@ namespace WeatherApplet {
                 string city_name = location.get_city_name ();
 
                 new_location (latitude, longitude, city_name);
-            } else {
-                reset_state ();
             }
         }
 
