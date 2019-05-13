@@ -1,6 +1,6 @@
 project('budgie-weather-applet',
     ['c', 'vala'],
-    version: '1.1.1',
+    version: '1.1.2',
     license: 'GPL-2.0',
     default_options: [
         'c_std=c11',
